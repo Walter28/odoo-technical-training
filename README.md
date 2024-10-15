@@ -1,6 +1,6 @@
 # 🏠 **Odoo Technical Training - Estate Module**
 
-![odoo-logo](https://img.shields.io/badge/Odoo-16.0-purple?style=for-the-badge&logo=odoo&logoColor=white)  
+![odoo-logo](https://img.shields.io/badge/Odoo-17.0-purple?style=for-the-badge&logo=odoo&logoColor=white)  
 ![license](https://img.shields.io/badge/License-MIT-blue?style=flat-square)  
 ![status](https://img.shields.io/badge/Status-In_Development-orange?style=flat-square)  
 ![python](https://img.shields.io/badge/Python-3.10+-yellow?style=flat-square&logo=python)  
@@ -31,7 +31,7 @@ Recherchez des biens par prix, localisation, et statut.
 
 ## 🧰 **Pré-requis**
 
-- Odoo **16.0+** installé  
+- Odoo **17.0+** installé  
 - Python **3.10+**  
 - Module **base** activé
 
