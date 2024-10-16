@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="estate_manager" model="res.groups">
+        <field name="name">Estate Manager</field>
+    </record>
+</odoo>
