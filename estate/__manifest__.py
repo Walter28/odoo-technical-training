@@ -11,6 +11,9 @@
         'views/property_view.xml',
         'views/menu_items.xml',
     ],
+    "demo": [
+        'demo/demo.xml',
+    ],
     "depends" : ["base"],
     "installable": True,
     "application": True,

@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="house_1" model="estate.property">
+            <field name="name">Serena chalet</field>
+            <field name="description">A small big house</field>
+            <field name="post_code">52463</field>
+            <field name="date_availability">2024-10-29</field>
+            <field name="expected_price">100_000_000</field>
+            <field name="selling_price">90_000_000</field>
+            <field name="bedrooms">5</field>
+            <field name="living_area">4</field>
+            <field name="facades">3</field>
+            <field name="garage">1</field>
+            <field name="garden">1</field>
+            <field name="garden_area">4</field>
+            <field name="garden_orientation">north</field>
+        </record>
+    </data>
+</odoo>
