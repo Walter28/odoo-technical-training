@@ -7,9 +7,16 @@
     """,
     "category": "",
     "data": [
+        #SECURITY
+        'security/res_groups.xml',
         'security/ir.model.access.csv',
-        'views/property_view.xml',
-        'views/menu_items.xml',
+        #VIEWS
+        'views/estate_property_views.xml',
+        'views/estate_menus.xml',
+        #MENU
+    ],
+    "demo": [
+        'demo/demo.xml',
     ],
     "depends" : ["base"],
     "installable": True,
