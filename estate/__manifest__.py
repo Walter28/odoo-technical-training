@@ -8,7 +8,7 @@
     "category": "",
     "data": [
         'security/ir.model.access.csv',
-        'security.res_groups.xml',
+        'security/res_groups.xml',
         'views/property_view.xml',
         'views/menu_items.xml',
     ],
