@@ -4,7 +4,7 @@
             <field name="name">Serena chalet</field>
             <field name="description">A small big house</field>
             <field name="post_code">52463</field>
-            <field name="date_availability">2024-12-01</field> 
+            <field name="date_availability">2024-12-01</field>
             <field name="expected_price">100000000</field>
             <field name="selling_price">90000000</field>
             <field name="bedrooms">5</field>
