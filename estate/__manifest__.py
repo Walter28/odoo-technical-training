@@ -7,10 +7,13 @@
     """,
     "category": "",
     "data": [
-        'security/ir.model.access.csv',
+        #SECURITY
         'security/res_groups.xml',
-        'views/property_view.xml',
-        'views/menu_items.xml',
+        'security/ir.model.access.csv',
+        #VIEWS
+        'views/estate_property_view.xml',
+        'views/estate_menus.xml',
+        #MENU
     ],
     "demo": [
         'demo/demo.xml',
