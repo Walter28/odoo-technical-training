@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        # search view and filters
+       <!-- search view and filters -->
         <record id="estate_property_search_view" model="ir.ui.view">
             <field name="name">estate.property.view.search</field>
             <field name="model">estate.property</field>
