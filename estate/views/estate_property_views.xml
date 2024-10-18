@@ -2,6 +2,29 @@
 <odoo>
     <data>
 
+        # search view and filters
+        <record id="estate_property_search_view" model="ir.ui.view">
+            <field name="name">estate.property.view.search</field>
+            <field name="model">estate.property</field>
+            <field name="arch" type="xml">
+                <search string="Search Property">
+                    <field name="name" />
+                    <field name="expected_price" />
+                    <field name="bedrooms" />
+                    <field name="facades" />
+                    <field name="living_area" />
+
+                    <field name="state" invisible="1" />
+                    <field name="post_code"/>
+                    # The filter within the *Filter* section of the search bar
+                    <filter name="filter_state_name" string="New Properties" domain="[('state', '=', 'new')]" />
+                    <filter name="filter_state_received" string="Offer Received" domain="[('state', '=', 'received')]" />
+                    # The filter within the *Group_by* section of the search bar
+                    <filter name="group_by_postcode" string="Postcode" context="{'group_by': 'post_code'}" />
+                </search>
+            </field>
+        </record>
+
         # the form view of one record
         <record id="estate_property_form_view" model="ir.ui.view">
             <field name="name">estate.property.view.form</field>
@@ -12,11 +35,7 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
-                        <group>
-                            <h1>
-                                <field name="name" />
-                            </h1>
-                        </group>
+                        <field name="name" />
                         <group>
                             <group>
                                 <field name="post_code" />
@@ -36,6 +55,11 @@
                                     <field name="garage" />
                                     <field name="garden" />
                                     <field name="garden_area" />
+                                </group>
+                            </page>
+                            <page string="Other infos">
+                                <group>
+                                    # I'll add things here soon
                                 </group>
                             </page>
                         </notebook>

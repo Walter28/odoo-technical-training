@@ -15,7 +15,7 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "This model is for your real estate company"
     
-    name = fields.Char(string="Title", required=True, default="House x")
+    name = fields.Char(string="Name", required=True, default="House x")
     # this info is useless to get displayed in form view
     active = fields.Boolean(default=True, invisible=True)
     state = fields.Selection(
