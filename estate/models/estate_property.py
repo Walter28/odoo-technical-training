@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields
 
 
-def _date_in_three_months(self:None):
+def _date_in_three_months(self):
     return fields.Date.today() + relativedelta(months=3)
 
 
