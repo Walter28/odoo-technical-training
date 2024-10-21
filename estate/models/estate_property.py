@@ -4,8 +4,10 @@ from email.policy import default
 from dateutil.relativedelta import relativedelta
 
 #odoo import
-from odoo import models, fields
+from odoo import models, fields, api
 from odoo.http import  request
+
+from odoo.odoo.tools.populate import compute
 
 
 # Utility functions outside the class
@@ -48,8 +50,8 @@ class EstateProperty(models.Model):
 
     # We will call a custom function in order to get the date in 3 months from today for the default value
     date_availability = fields.Date(string="Available from", default=lambda self: date_in_three_months(), copy=False)
-    expected_price = fields.Float(required=True, string="Expected price", readonly=True)
-    best_offer = fields.Float()
+    expected_price = fields.Float(required=True, string="Expected price")
+    best_offer = fields.Float(compute='_compute_best_offer')
     selling_price = fields.Float(string="Selling price", copy=False)
     bedrooms = fields.Integer(string="Bedrooms", default=2)
     living_area = fields.Integer(string="Living area")
@@ -78,3 +80,16 @@ class EstateProperty(models.Model):
     # ie c'est dans l'offre quon aura le property_id, une offre ne peut avoir une et une seule propriete
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
     property_tag_ids = fields.Many2many("estate.property.tag", string="Property tag")
+
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for rec in self:
+            rec.total_area = rec.living_area + rec.garden_area
+
+    # computed fields
+    total_area = fields.Integer(string="Total Area", compute=_compute_total_area)
+
+    @api.depends('offer_ids.price')
+    def _compute_best_offer(self):
+        for property in self:
+            property.best_offer = max(property.offer_ids.mapped('price')) if property.offer_ids else 0
