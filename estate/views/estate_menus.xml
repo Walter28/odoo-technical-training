@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <menuitem name="Real Estate" id="menu_root_level" web_icon="estate, static/description/icon.png">
-        <menuitem id="menu_second_level" name="Property">
-            <menuitem id="menu_third_level" name="Third" action="estate.action_property" />
+    <menuitem name="Real Estate" id="menu_root_property_ads" web_icon="estate, static/description/icon.png">
+        <menuitem id="menu_property_ads" name="Advertisements">
+            <menuitem id="menu_property" name="Ads" action="estate.action_property" />
+        </menuitem>
+        <menuitem id="menu_property_ads_settings" name="Settings">
+            <menuitem id="menu_property_type_settings" name="Property Types" action="estate.action_property_type" />
+            <menuitem id="menu_property_tag_settings" name="Property Tags" action="estate.action_property_tag" />
         </menuitem>
     </menuitem>
 </odoo>
