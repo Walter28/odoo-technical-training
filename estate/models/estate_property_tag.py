@@ -13,4 +13,4 @@ class EstatePropertyTag(models.Model):
         Odoo will create a new in between table in the db
     """
 
-    name = fields.Char(string="Name", required=1)
+    name = fields.Char(string="Name", required=True)

@@ -54,15 +54,8 @@
                             <group>
                                 <field name="expected_price" />
                                 <field name="selling_price" />
+                                <field name="best_offer" readonly="True" />
                             </group>
-                            <!--This is not into a group, means it will fill the grid layout-->
-                            <field name="offer_ids" string="Offers">
-                                <tree>
-                                    <field name="price" />
-                                    <field name="res_partner_id" />
-                                    <field name="status" />
-                                </tree>
-                            </field>
                         </group>
                         <notebook>
                             <page string="Description">
@@ -73,6 +66,7 @@
                                     <field name="garage" />
                                     <field name="garden" />
                                     <field name="garden_area" />
+                                    <field name="total_area" readonly="1" />
                                 </group>
                             </page>
                             <page string="Offers">
@@ -80,6 +74,7 @@
                                         <tree editable="bottom">
                                             <field name="price" />
                                             <field name="res_partner_id" />
+                                            <field name="creation_date" />
                                             <field name="validity" />
                                             <field name="deadline" />
                                             <field name="status" nolabel="1" />
@@ -130,10 +125,5 @@
             </field>
         </record>
 
-        <!-- button for settings view -->
-<!--        <record id="action_settings" model="ir.actions.act_window">-->
-<!--            <field name="name">Setting</field>-->
-<!--            <field name="res_model">estate.property</field>-->
-<!--        </record>-->
     </data>
 </odoo>
