@@ -73,7 +73,7 @@ class EstateProperty(models.Model):
     # this is the buyer id
     res_partner_id = fields.Many2one("res.partner", string="Buyer", copy=False)
     # this is the sales id : (Default) the current logged-in user
-    res_users_id = fields.Many2one("res.users", string="Salesperson", default=lambda self: get_current_user())
+    res_users_id = fields.Many2one("res.users", string="Salesperson", default=lambda self: self.env.user)
     # *property_id* => this is an inverse field, is he IF of the property offer
     # ie c'est dans l'offre quon aura le property_id, une offre ne peut avoir une et une seule propriete
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
