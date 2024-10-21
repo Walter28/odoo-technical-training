@@ -4,7 +4,7 @@ from email.policy import default
 from dateutil.relativedelta import relativedelta
 
 #odoo import
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.http import  request
 
 from odoo.odoo.tools.populate import compute
@@ -93,3 +93,23 @@ class EstateProperty(models.Model):
     def _compute_best_offer(self):
         for property in self:
             property.best_offer = max(property.offer_ids.mapped('price')) if property.offer_ids else 0
+
+    @api.onchange("garden")
+    def _compute_garden(self):
+        for property in self:
+            if not property.garden:
+                property.garden_area = 0
+                property.garden_orientation = False
+
+    @api.onchange("date_availability")
+    def _onchange_date_availability(self):
+        for property in self:
+            print(f"++++++++++++++++++++++++++++++++++++ Date today : {fields.Date.today()}")
+            print(f"++++++++++++++++++++++++++++++++++++ Date Availability : {property.date_availability}")
+            if property.date_availability < fields.Date.today():
+                return {
+                    "warning": {
+                        "title": _("Warning"), # _(" ") this : bcz we wanna make the text translatable
+                        "message": _("The Availability date must be today or in the feature")
+                    }
+                }
