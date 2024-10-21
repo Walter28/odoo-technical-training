@@ -3,7 +3,6 @@ from datetime import  timedelta
 
 # odoo import goes here
 from odoo import  fields, models, api
-from odoo.odoo.tools.populate import compute
 
 
 class EstatePropertyOffer(models.Model):
@@ -29,19 +28,18 @@ class EstatePropertyOffer(models.Model):
     # with this attribute if u change the deadline date, it will update the validity field
     # we do not do this with *compute* attribute, coz it will create a Infinite Loop
     deadline = fields.Date("Deadline", compute='_compute_deadline', inverse='_inverse_deadline')
-    creation_date = fields.Date(string="Created At")
 
     # Note : related & computed fields are both readonly, means they are non-storable
     # if u need to search theme, store them first, to do this, add *store* attribute as follows
     type_id = fields.Many2one(related="property_id.property_type_id", store=True)
 
-    @api.depends("validity", "creation_date")
+    @api.depends("validity", "create_date")
     def _compute_deadline(self):
         for rec in self:
             # coz validity was int type, we cant compute this with a Date type
             # that why we use timedelta from date time to add days on our date type here
-            if rec.creation_date and rec.validity:
-                rec.deadline = rec.creation_date + timedelta(days=rec.validity)
+            if rec.create_date and rec.validity:
+                rec.deadline = rec.create_date + timedelta(days=rec.validity)
             else:
                 rec.deadline = False
 
@@ -51,4 +49,4 @@ class EstatePropertyOffer(models.Model):
     def _inverse_deadline(self):
         for rec in self:
             # convert this to days, never mind the output is. (it's the date, full date)
-            rec.validity = (rec.deadline - rec.creation_date).days
+            rec.validity = (rec.deadline - rec.create_date.date()).days

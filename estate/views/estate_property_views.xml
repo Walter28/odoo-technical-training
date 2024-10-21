@@ -75,7 +75,7 @@
                                         <tree editable="bottom">
                                             <field name="price" />
                                             <field name="res_partner_id" />
-                                            <field name="creation_date" />
+                                            <field name="create_date" />
                                             <field name="validity" />
                                             <field name="deadline" />
                                             <field name="status" nolabel="1" />
