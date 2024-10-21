@@ -7,8 +7,6 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.http import  request
 
-from odoo.odoo.tools.populate import compute
-
 
 # Utility functions outside the class
 # this function return the day in 3 months starting to now
@@ -96,10 +94,9 @@ class EstateProperty(models.Model):
 
     @api.onchange("garden")
     def _compute_garden(self):
-        for property in self:
-            if not property.garden:
-                property.garden_area = 0
-                property.garden_orientation = False
+        if not property.garden:
+            property.garden_area = 0
+            property.garden_orientation = False
 
     @api.onchange("date_availability")
     def _onchange_date_availability(self):
