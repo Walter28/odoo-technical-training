@@ -16,16 +16,16 @@
 
                     <field name="state" invisible="1" />
                     <field name="post_code"/>
-                    # The filter within the *Filter* section of the search bar
+                    <!-- The filter within the *Filter* section of the search bar -->
                     <filter name="filter_state_name" string="New Properties" domain="[('state', '=', 'new')]" />
                     <filter name="filter_state_received" string="Offer Received" domain="[('state', '=', 'received')]" />
-                    # The filter within the *Group_by* section of the search bar
+                    <!-- The filter within the *Group_by* section of the search bar -->
                     <filter name="group_by_postcode" string="Postcode" context="{'group_by': 'post_code'}" />
                 </search>
             </field>
         </record>
 
-        # the form view of one record
+        <!-- the form view of one record -->
         <record id="estate_property_form_view" model="ir.ui.view">
             <field name="name">estate.property.view.form</field>
             <field name="model">estate.property</field>
@@ -35,9 +35,19 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
-                        <field name="name" />
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" />
+                            </div>
+                            <h1 class="mb32">
+                                <field name="name" class="mb16" />
+                                <field name="property_tag_ids" widget="many2many_tags"/>
+                            </h1>
+                            <field name="active" invisible="1" />
+                        </div>
                         <group>
                             <group>
+                                <field name="property_type_id" />
                                 <field name="post_code" />
                                 <field name="date_availability" />
                             </group>
@@ -45,6 +55,14 @@
                                 <field name="expected_price" />
                                 <field name="selling_price" />
                             </group>
+                            <!--This is not into a group, means it will fill the grid layout-->
+                            <field name="offer_ids" string="Offers">
+                                <tree>
+                                    <field name="price" />
+                                    <field name="res_partner_id" />
+                                    <field name="status" />
+                                </tree>
+                            </field>
                         </group>
                         <notebook>
                             <page string="Description">
@@ -57,9 +75,21 @@
                                     <field name="garden_area" />
                                 </group>
                             </page>
+                            <page string="Offers">
+                                    <field name="offer_ids">
+                                        <tree editable="bottom">
+                                            <field name="price" />
+                                            <field name="res_partner_id" />
+                                            <field name="validity" />
+                                            <field name="deadline" />
+                                            <field name="status" nolabel="1" />
+                                        </tree>
+                                    </field>
+                            </page>
                             <page string="Other infos">
                                 <group>
-                                    # I'll add things here soon
+                                    <field name="res_users_id" />
+                                    <field name="res_partner_id" />
                                 </group>
                             </page>
                         </notebook>
@@ -70,7 +100,7 @@
             </field>
         </record>
 
-        # tree view for all ours record
+        <!-- tree view for all ours record -->
         <record id="estate_property_tree_view" model="ir.ui.view">
             <field name="name">estate.property.view.tree</field>
             <field name="model">estate.property</field>
@@ -79,6 +109,7 @@
                     <field name="name" />
                     <field name="post_code" />
                     <field name="bedrooms" />
+                    <field name="property_type_id" />
                     <field name="living_area" />
                     <field name="expected_price" />
                     <field name="selling_price" />
@@ -87,7 +118,7 @@
             </field>
         </record>
 
-        # button view
+        <!-- button for advertisements view -->
         <record id="action_property" model="ir.actions.act_window">
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
@@ -98,5 +129,11 @@
                 </p>
             </field>
         </record>
+
+        <!-- button for settings view -->
+<!--        <record id="action_settings" model="ir.actions.act_window">-->
+<!--            <field name="name">Setting</field>-->
+<!--            <field name="res_model">estate.property</field>-->
+<!--        </record>-->
     </data>
 </odoo>
