@@ -142,11 +142,6 @@ class EstateProperty(models.Model):
     @api.constrains('selling_price', 'expected_price')
     def _check_constraint(self):
         for estate in self:
-            if estate.selling_price < 5000:
-                # we use validation error bcz we'll not be able to validate this amount of the selling price
-                raise ValidationError(
-                    _("U cant sell a property on that Price it too cheap (:")
-                )
             if 0 < estate.selling_price < (estate.expected_price * 0.9):
                 raise ValidationError(
                     _("Your selling price is tooo lower, it must be upto 90% superior of your expected price ")
