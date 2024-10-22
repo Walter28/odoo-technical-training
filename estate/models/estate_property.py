@@ -1,4 +1,3 @@
-
 #python import
 from email.policy import default
 from dateutil.relativedelta import relativedelta
@@ -6,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 #odoo import
 from odoo import models, fields, api, _
 from odoo.http import  request
+from odoo.exceptions import UserError
 
 
 # Utility functions outside the class
@@ -50,7 +50,7 @@ class EstateProperty(models.Model):
     date_availability = fields.Date(string="Available from", default=lambda self: date_in_three_months(), copy=False)
     expected_price = fields.Float(required=True, string="Expected price")
     best_offer = fields.Float(compute='_compute_best_offer')
-    selling_price = fields.Float(string="Selling price", copy=False)
+    selling_price = fields.Float(string="Selling price", copy=False, readonly=True)
     bedrooms = fields.Integer(string="Bedrooms", default=2)
     living_area = fields.Integer(string="Living area")
     facades = fields.Integer(string="Facades")
@@ -110,3 +110,25 @@ class EstateProperty(models.Model):
                         "message": _("The Availability date must be today or in the feature")
                     }
                 }
+
+    def action_sell(self):
+        if self.state == 'canceled':
+            raise  UserError(
+                _("Canceled Property can never be sold")
+            )
+        elif self.state == 'sold':
+            raise UserError(
+                _("This Property is already taken")
+            )
+        self.state = 'sold'
+
+    def action_decline(self):
+        if self.state == 'sold':
+            raise  UserError(
+                _("Sold Property can never be canceled")
+            )
+        elif self.state == 'canceled':
+            raise UserError(
+                _("The offer is already canceled, u can't do it twice")
+            )
+        self.state = 'canceled'
