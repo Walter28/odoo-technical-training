@@ -8,7 +8,7 @@
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
                 <search string="Search Property">
-                    <field name="name" />
+                    <field name="name" filter_domain="[('name', 'ilike', self)]" />
                     <field name="expected_price" />
                     <field name="bedrooms" />
                     <field name="facades" />
@@ -17,6 +17,7 @@
                     <field name="state" invisible="1" />
                     <field name="post_code"/>
                     <!-- The filter within the *Filter* section of the search bar -->
+                    <filter name="available" string="Available"  domain="[('state', 'in', ('new', 'received'))]" />
                     <filter name="filter_state_name" string="New Properties" domain="[('state', '=', 'new')]" />
                     <filter name="filter_state_received" string="Offer Received" domain="[('state', '=', 'received')]" />
                     <!-- The filter within the *Group_by* section of the search bar -->
@@ -149,6 +150,10 @@
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
             <field name="view_mode">tree,form</field>
+            <!-- this is the default filter key applied by default -->
+            <field name="context">
+                {'search_default_available':True}
+            </field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a Property to Advertise
