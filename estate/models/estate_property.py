@@ -30,6 +30,7 @@ class EstateProperty(models.Model):
         ("check_expected_price", "CHECK(expected_price > 0)", "Expected price must be strictly positive!!!"),
         ("check_selling_price", "CHECK(selling_price >= 0)", "Selling price must be a least positive!!!"),
     ]
+    _order = "id desc"
     
     name = fields.Char(string="Name", required=True, default="House x")
     # this field is useless to get displayed in form view
