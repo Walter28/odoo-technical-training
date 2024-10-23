@@ -84,6 +84,10 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
     property_tag_ids = fields.Many2many("estate.property.tag", string="Property tag")
 
+    # For some of our widget, these fields are mendatory
+    currency_id = fields.Integer()
+    color = fields.Integer()
+
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
         for rec in self:
