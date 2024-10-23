@@ -1,0 +1,5 @@
+
+.o_custom_decoration .o_list_view tr[data-state='new'] {
+    font-weight: bold;  /* Make text bold */
+    color: #28a745 !important;  /* Vert similar à "decoration-success" */
+}

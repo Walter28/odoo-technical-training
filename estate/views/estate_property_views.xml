@@ -32,8 +32,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_decline" type="object" class="btn btn-danger">Cancel</button>
-                        <button name="action_sell" type="object" class="btn btn-primary">Sold</button>
+                        <button name="action_decline" title="canceled offer" invisible="state in ('sold', 'canceled')" type="object" class="btn btn-danger">Cancel</button>
+                        <button name="action_sell" title="sell property" invisible="state in ('sold', 'canceled')" type="object" class="btn btn-primary">Sold</button>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -47,6 +47,7 @@
                                         name="property_tag_ids"
                                         widget="many2many_tags"
                                         options="{'color_field':'color'}"
+                                        editable="True"
                                 />
                             </h1>
                             <field name="active" invisible="1" />
@@ -80,22 +81,27 @@
                                     <field name="living_area" />
                                     <field name="garage" widget="boolean_toggle" />
                                     <field name="garden" widget="boolean_toggle" />
-                                    <field name="garden_area" />
-                                    <field name="garden_orientation" widget="selection_badge" />
+                                    <field name="garden_area" invisible="garden == 0" />
+                                    <field name="garden_orientation" invisible="garden == 0" widget="selection_badge" />
                                     <field name="total_area" readonly="1" />
                                 </group>
                             </page>
                             <page string="Offers">
                                     <field name="offer_ids">
-                                        <tree editable="bottom">
+                                        <tree
+                                                decoration-success="status == 'accepted'"
+                                                decoration-danger="status == 'refused'"
+                                                editable="bottom"
+                                        >
                                             <field name="price" />
                                             <field name="res_partner_id" />
                                             <field name="create_date" />
                                             <field name="validity" />
-                                            <field name="deadline" />
-                                            <button icon="fa-check" type="object" name="action_accept" />
-                                            <button icon="fa-close" type="object" name="action_refuse" />
-                                            <field name="status" nolabel="0" />
+                                            <field name="deadline" column_invisible="parent.state == 'sold' " />
+                                            <button icon="fa-check" invisible="status in ('accepted', 'refused')" type="object" help="Accept" name="action_accept" />
+                                            <button icon="fa-close" invisible="status in ('accepted', 'refused')" type="object" help="Refuse" name="action_refuse" />
+                                            <!-- default this will not be displayed -->
+                                            <field name="status" optional="False" />
                                         </tree>
                                     </field>
                             </page>
@@ -118,7 +124,11 @@
             <field name="name">estate.property.view.tree</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree
+                    decoration-success="state == 'received'"
+                    decoration-bf="state == 'accepted'"
+                    decoration-muted="state == 'sold'"
+                >
                     <field name="name" />
                     <field name="post_code" />
                     <field name="bedrooms" />
@@ -127,6 +137,9 @@
                     <field name="expected_price" />
                     <field name="selling_price" />
                     <field name="date_availability" />
+                    <field name="state" optional="hide" />
+                    <field name="has_accepted_offer" optional="hide" />
+                    <field name="has_offers" optional="hide" />
                 </tree>
             </field>
         </record>
