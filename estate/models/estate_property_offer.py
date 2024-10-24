@@ -2,7 +2,8 @@
 from datetime import  timedelta
 
 # odoo import goes here
-from odoo import  fields, models, api
+from odoo import  fields, models, api, _
+from odoo.odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
@@ -50,3 +51,16 @@ class EstatePropertyOffer(models.Model):
         for rec in self:
             # convert this to days, never mind the output is. (it's the date, full date)
             rec.validity = (rec.deadline - rec.create_date.date()).days
+
+
+    def action_accept(self):
+        self.ensure_one()
+        if "accepted" in self.property_id.offer_ids.mapped('status'):
+            raise  UserError(
+                _("This property already have an offer accepted")
+            )
+        self.status = "accepted"
+        self.property_id.selling_price = self.price
+
+    def action_refuse(self):
+        self.status = "refused"

@@ -32,6 +32,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="action_decline" type="object" class="btn btn-danger">Cancel</button>
+                        <button name="action_sell" type="object" class="btn btn-primary">Sold</button>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -78,7 +80,9 @@
                                             <field name="create_date" />
                                             <field name="validity" />
                                             <field name="deadline" />
-                                            <field name="status" nolabel="1" />
+                                            <button icon="fa-check" type="object" name="action_accept" />
+                                            <button icon="fa-close" type="object" name="action_refuse" />
+                                            <field name="status" nolabel="0" />
                                         </tree>
                                     </field>
                             </page>
