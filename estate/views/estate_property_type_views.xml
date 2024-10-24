@@ -20,6 +20,19 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_property_ids"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-list">
+                                <field name="property_count" string="Related Properties" widget="statinfo" />
+                            </button>
+                        </div>
+<!--                        <div class="oe_button_box" name="button_box">-->
+<!--                            <button name="%(estate.action_property_offers_view)d" type="action" class="oe_stat_button" icon="fa-list">-->
+<!--                                <field name="offer_count" string="Offers" widget="statinfo" />-->
+<!--                            </button>-->
+<!--                        </div>-->
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" />
