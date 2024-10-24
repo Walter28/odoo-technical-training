@@ -10,4 +10,5 @@ class EstatePropertyType(models.Model):
         This model describe the table that will store our properties type
     """
 
-    name = fields.Char(string="Name")
+    name = fields.Char(string="Name", required=True)
+    property_ids = fields.One2many("estate.property", "property_type_id")
