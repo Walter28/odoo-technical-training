@@ -12,7 +12,10 @@
                     <field name="expected_price" />
                     <field name="bedrooms" />
                     <field name="facades" />
-                    <field name="living_area" />
+                    <field
+                            name="living_area"
+                            filter_domain="[('living_area', '>=', self)]"
+                    />
 
                     <field name="state" invisible="1" />
                     <field name="post_code"/>
