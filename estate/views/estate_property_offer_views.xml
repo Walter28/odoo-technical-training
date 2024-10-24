@@ -45,7 +45,10 @@
             <field name="name">estate.property.offer.view.tree</field>
             <field name="model">estate.property.offer</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree
+                    decoration-success="status == 'accepted'"
+                    decoration-danger="status == 'refused'"
+                >
                     <field name="price" />
                     <field name="res_partner_id" />
                     <field name="property_id" />
@@ -53,9 +56,10 @@
                     <field name="create_date" />
                     <field name="validity" />
                     <field name="deadline" />
-                    <button icon="fa-check" type="object" name="action_accept" />
-                    <button icon="fa-close" type="object" name="action_refuse" />
-                    <field name="status" />
+                    <button icon="fa-check" invisible="status in ('accepted', 'refused')" type="object" help="Accept" name="action_accept" />
+                    <button icon="fa-close" invisible="status in ('accepted', 'refused')" type="object" help="Refuse" name="action_refuse" />
+                    <!-- default this will not be displayed -->
+                    <field name="status" optional="False" />
                 </tree>
             </field>
         </record>

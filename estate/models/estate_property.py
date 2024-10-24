@@ -8,6 +8,8 @@ from odoo.http import  request
 from odoo.exceptions import UserError
 from odoo.exceptions import ValidationError
 
+from odoo.odoo.tools.populate import compute
+
 
 # Utility functions outside the class
 # this function return the day in 3 months starting to now
@@ -30,6 +32,7 @@ class EstateProperty(models.Model):
         ("check_expected_price", "CHECK(expected_price > 0)", "Expected price must be strictly positive!!!"),
         ("check_selling_price", "CHECK(selling_price >= 0)", "Selling price must be a least positive!!!"),
     ]
+    _order = "id desc"
     
     name = fields.Char(string="Name", required=True, default="House x")
     # this field is useless to get displayed in form view
@@ -82,6 +85,9 @@ class EstateProperty(models.Model):
     # *property_id* => this is an inverse field, is he IF of the property offer
     # ie c'est dans l'offre quon aura le property_id, une offre ne peut avoir une et une seule propriete
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
+    has_accepted_offer = fields.Boolean(compute="_compute_accepted_offer")
+    has_offers = fields.Boolean(compute="_compute_has_offers")
+    # update_state = fiel
     property_tag_ids = fields.Many2many("estate.property.tag", string="Property tag")
 
     # For some of our widget, these fields are mendatory
@@ -103,10 +109,11 @@ class EstateProperty(models.Model):
 
     @api.onchange("garden")
     def _compute_garden(self):
-        for property in self:
-            if not property.garden:
-                property.garden_area = 0
-                property.garden_orientation = False
+        # self in an onchange context will always contain only one record at a time (the one currently being edited)
+        # no need using for loop
+        if not property.garden:
+            property.garden_area = 0
+            property.garden_orientation = False
 
     @api.onchange("date_availability")
     def _onchange_date_availability(self):
@@ -120,6 +127,24 @@ class EstateProperty(models.Model):
                         "message": _("The Availability date must be today or in the feature")
                     }
                 }
+
+    @api.depends('offer_ids.status')
+    def _compute_accepted_offer(self):
+        for property in self:
+            # Check if there is at least one offer with status 'accepted'
+            property.has_accepted_offer = any(
+                offer.status == 'accepted' for offer in property.offer_ids
+            )
+            if property.has_accepted_offer:
+                property.state = 'accepted'
+
+    @api.depends('offer_ids')
+    def _compute_has_offers(self):
+        """Compute if there are any offers."""
+        for property in self:
+            property.has_offers = bool(property.offer_ids)
+            if property.has_offers and property.state not in ['accepted', 'sold', 'canceled']:
+                property.state = 'received'
 
     def action_sell(self):
         if self.state == 'canceled':

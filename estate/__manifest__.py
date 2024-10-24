@@ -6,6 +6,7 @@
         Real estate module to show available properties
     """,
     "category": "",
+
     "data": [
         #SECURITY
         'security/res_groups.xml',
@@ -18,9 +19,17 @@
         'views/estate_menus.xml',
         #MENU
     ],
+
     "demo": [
         'demo/demo.xml',
     ],
+
+    "assets" : {
+        "web.assets_backend": [
+            'estate/static/src/css/style.css',
+        ],
+    },
+
     "depends" : ["base"],
     "installable": True,
     "application": True,
