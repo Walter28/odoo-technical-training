@@ -109,10 +109,11 @@ class EstateProperty(models.Model):
 
     @api.onchange("garden")
     def _compute_garden(self):
-        for property in self:
-            if not property.garden:
-                property.garden_area = 0
-                property.garden_orientation = False
+        # self in an onchange context will always contain only one record at a time (the one currently being edited)
+        # no need using for loop
+        if not property.garden:
+            property.garden_area = 0
+            property.garden_orientation = False
 
     @api.onchange("date_availability")
     def _onchange_date_availability(self):
