@@ -8,6 +8,7 @@
             <field name="date_availability">2024-12-01</field>
             <field name="expected_price">100000000</field>
             <field name="selling_price">90000000</field>
+            <field name="create_date">2024-12-01</field>
             <field name="bedrooms">5</field>
             <field name="living_area">4</field>
             <field name="facades">3</field>

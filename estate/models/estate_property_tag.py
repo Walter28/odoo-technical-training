@@ -12,5 +12,8 @@ class EstatePropertyTag(models.Model):
         That why is model will be in Many2many relationship with estate.property
         Odoo will create a new in between table in the db
     """
+    _sql_constraints = [
+        ("unique_tag_name", "UNIQUE(name)", "Tag name should be unique !!!")
+    ]
 
     name = fields.Char(string="Name", required=True)

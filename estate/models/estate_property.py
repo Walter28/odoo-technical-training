@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.http import  request
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 # Utility functions outside the class
@@ -25,6 +26,10 @@ def get_current_user():
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "This model is for your real estate company"
+    _sql_constraints = [
+        ("check_expected_price", "CHECK(expected_price > 0)", "Expected price must be strictly positive!!!"),
+        ("check_selling_price", "CHECK(selling_price >= 0)", "Selling price must be a least positive!!!"),
+    ]
     
     name = fields.Char(string="Name", required=True, default="House x")
     # this field is useless to get displayed in form view
@@ -94,9 +99,10 @@ class EstateProperty(models.Model):
 
     @api.onchange("garden")
     def _compute_garden(self):
-        if not property.garden:
-            property.garden_area = 0
-            property.garden_orientation = False
+        for property in self:
+            if not property.garden:
+                property.garden_area = 0
+                property.garden_orientation = False
 
     @api.onchange("date_availability")
     def _onchange_date_availability(self):
@@ -132,3 +138,16 @@ class EstateProperty(models.Model):
                 _("The offer is already canceled, u can't do it twice")
             )
         self.state = 'canceled'
+
+    @api.constrains('selling_price', 'expected_price')
+    def _check_constraint(self):
+        for estate in self:
+            if estate.selling_price < 5000:
+                # we use validation error bcz we'll not be able to validate this amount of the selling price
+                raise ValidationError(
+                    _("U cant sell a property on that Price it too cheap (:")
+                )
+            if 0 < estate.selling_price < (estate.expected_price * 0.9):
+                raise ValidationError(
+                    _("Your selling price is tooo lower, it must be upto 90% superior of your expected price ")
+                )

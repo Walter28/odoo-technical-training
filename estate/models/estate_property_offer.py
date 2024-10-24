@@ -3,7 +3,7 @@ from datetime import  timedelta
 
 # odoo import goes here
 from odoo import  fields, models, api, _
-from odoo.odoo.exceptions import UserError
+from odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
@@ -11,6 +11,9 @@ class EstatePropertyOffer(models.Model):
     _description = """
         This model describe the table that will store our different offers
     """
+    _sql_constraints = [
+        ("check_offer_price", "CHECK(price > 0)", "An offer price must be positive")
+    ]
 
     price = fields.Float()
     status = fields.Selection(
@@ -58,6 +61,10 @@ class EstatePropertyOffer(models.Model):
         if "accepted" in self.property_id.offer_ids.mapped('status'):
             raise  UserError(
                 _("This property already have an offer accepted")
+            )
+        if not self.property_id.res_partner_id:
+            raise UserError(
+                _("Please set up the Buyer first before u accepting the offer")
             )
         self.status = "accepted"
         self.property_id.selling_price = self.price
