@@ -173,5 +173,5 @@ class EstateProperty(models.Model):
         for estate in self:
             if 0 < estate.selling_price < (estate.expected_price * 0.9):
                 raise ValidationError(
-                    _("Your selling price is tooo lower, it must be upto 90% superior of your expected price ")
+                    _("Your selling price is tooo low, it must be upto 90% superior of your expected price ")
                 )
