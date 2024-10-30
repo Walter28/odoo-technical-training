@@ -91,16 +91,9 @@ class EstateProperty(models.Model):
     # update_state = fiel
     property_tag_ids = fields.Many2many("estate.property.tag", string="Property tag")
 
-    offer_count = fields.Integer(string="Offer Count", compute="_compute_offer_count")
-
     # For some of our widget, these fields are mendatory
     currency_id = fields.Integer()
     color = fields.Integer()
-
-    @api.depends('offer_ids')
-    def _compute_offer_count(self):
-        for property in self:
-            property.offer_count = len(property.offer_ids)
 
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
