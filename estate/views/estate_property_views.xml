@@ -29,19 +29,6 @@
             </field>
         </record>
 
-        <!-- button for property offers view -->
-        <record id="action_property_offers_view" model="ir.actions.act_window">
-            <field name="name">Property Offers</field>
-            <field name="res_model">estate.property.offer</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="target">current</field>
-            <!-- *active_id* is provided automatically by Odoo when an action is called from a single record (like from a form view).-->
-            <field name="domain">[('property_id', '=', active_id)]</field>
-            <field name="context">
-                {'default_field_id': active_id}
-            </field>
-        </record>
-
         <!-- the form view of one record -->
         <record id="estate_property_form_view" model="ir.ui.view">
             <field name="name">estate.property.view.form</field>
@@ -54,11 +41,6 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" icon="fa-list" name="%(estate.action_property_offers_view)d" type="action">
-                                <field name="offer_count" string="Offers" widget="statinfo" />
-                            </button>
-                        </div>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" />
@@ -170,7 +152,7 @@
         <record id="action_property" model="ir.actions.act_window">
             <field name="name">Property</field>
             <field name="res_model">estate.property</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">tree,form</field>
             <!-- this is the default filter key applied by default -->
             <field name="context">
                 {'search_default_available':True}

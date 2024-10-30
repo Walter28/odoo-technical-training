@@ -16,7 +16,6 @@ class EstatePropertyOffer(models.Model):
     ]
     _order = "price desc"
 
-    name = fields.Char(string="Description", compute="_compute_name")
     price = fields.Float()
     status = fields.Selection(
         [
@@ -48,14 +47,6 @@ class EstatePropertyOffer(models.Model):
                 rec.deadline = rec.create_date + timedelta(days=rec.validity)
             else:
                 rec.deadline = False
-
-    @api.depends('property_id', 'res_partner_id')
-    def _compute_name(self):
-        for property in self:
-            if property.property_id and property.res_partner_id:
-                property.name = f"{property.property_id.name} - {property.res_partner_id.name}"
-            else:
-                property.name = False
 
     # no need to use decorators here, coz this does not depend to any field
     # output will be visible only when u SAVE CHANGES
