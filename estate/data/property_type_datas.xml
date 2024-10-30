@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    noupdate=1 mean create this record only ones, no update-->
+    Two way to do this, the first with is this, the second is with the CSV, checkout "estate.property.type.csv"
+    <data noupdate="1">
+        <record id="property_type_house" model="estate.property.type">
+            <field name="name">House</field>
+        </record>
+        <record id="property_type_apart" model="estate.property.type">
+            <field name="name">Apartment</field>
+        </record>
+        <record id="property_type_penthouse" model="estate.property.type">
+            <field name="name">Penthouse</field>
+        </record>
+        <record id="property_type_castle" model="estate.property.type">
+            <field name="name">Castle</field>
+        </record>
+    </data>
+</odoo>

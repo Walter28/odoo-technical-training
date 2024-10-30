@@ -34,3 +34,26 @@ class EstatePropertyType(models.Model):
                 "default_property_type_id" : self.id
             }
         }
+
+    @api.model_create_multi
+    def create(self, vals_dic):
+        """
+        This inherited method help to create a tag with the same name
+        as a property-type when we are creating this last
+        """
+        res = super().create(vals_dic)
+        for vals in vals_dic:
+            self.env["estate.property.tag"].create(
+                {
+                    "name": vals.get("name"),
+                }
+            )
+        return  res
+
+    def unlink(self):
+        """
+        All time that u remove a property type, put in "Cancceled" state
+        all properties linked with this one
+        """
+        self.property_ids.state = "canceled"
+        return  super().unlink()

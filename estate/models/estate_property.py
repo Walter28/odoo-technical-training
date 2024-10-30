@@ -8,8 +8,6 @@ from odoo.http import  request
 from odoo.exceptions import UserError
 from odoo.exceptions import ValidationError
 
-from odoo.odoo.tools.populate import compute
-
 
 # Utility functions outside the class
 # this function return the day in 3 months starting to now
@@ -27,6 +25,8 @@ def get_current_user():
 
 class EstateProperty(models.Model):
     _name = "estate.property"
+    # the chatter
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "This model is for your real estate company"
     _sql_constraints = [
         ("check_expected_price", "CHECK(expected_price > 0)", "Expected price must be strictly positive!!!"),
@@ -80,6 +80,7 @@ class EstateProperty(models.Model):
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
     # this is the buyer id
     res_partner_id = fields.Many2one("res.partner", string="Buyer", copy=False)
+    phone = fields.Char(readonly=True, related="res_partner_id.phone")
     # this is the sales id : (Default) the current logged-in user
     res_users_id = fields.Many2one("res.users", string="Salesperson", default=lambda self: self.env.user)
     # *property_id* => this is an inverse field, is he IF of the property offer
@@ -111,6 +112,8 @@ class EstateProperty(models.Model):
 
     @api.depends('offer_ids.price')
     def _compute_best_offer(self):
+        print(f"++++ SELF : {self}")
+        print(f"++++ SELF TYPE : {type(self)}")
         for property in self:
             property.best_offer = max(property.offer_ids.mapped('price')) if property.offer_ids else 0
 
@@ -118,9 +121,9 @@ class EstateProperty(models.Model):
     def _compute_garden(self):
         # self in an onchange context will always contain only one record at a time (the one currently being edited)
         # no need using for loop
-        if not property.garden:
-            property.garden_area = 0
-            property.garden_orientation = False
+        if not self.garden:
+            self.garden_area = 0
+            self.garden_orientation = False
 
     @api.onchange("date_availability")
     def _onchange_date_availability(self):
@@ -150,8 +153,6 @@ class EstateProperty(models.Model):
         """Compute if there are any offers."""
         for property in self:
             property.has_offers = bool(property.offer_ids)
-            if property.has_offers and property.state not in ['accepted', 'sold', 'canceled']:
-                property.state = 'received'
 
     def action_sell(self):
         if self.state == 'canceled':
@@ -181,4 +182,15 @@ class EstateProperty(models.Model):
             if 0 < estate.selling_price < (estate.expected_price * 0.9):
                 raise ValidationError(
                     _("Your selling price is tooo lower, it must be upto 90% superior of your expected price ")
+                )
+
+    @api.ondelete(at_uninstall=False)
+    def _ondelete_property(self):
+        """
+            Prevent deletion of property if it's state is not "New" or "Canceled"
+        """
+        for rec in self:
+            if rec.state not in ['new', 'canceled']:
+                raise UserError(
+                    _("You can't delete properties containing offers!")
                 )
