@@ -4,6 +4,7 @@ from datetime import  timedelta
 # odoo import goes here
 from odoo import  fields, models, api, _
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class EstatePropertyOffer(models.Model):
@@ -12,7 +13,8 @@ class EstatePropertyOffer(models.Model):
         This model describe the table that will store our different offers
     """
     _sql_constraints = [
-        ("check_offer_price", "CHECK(price > 0)", "An offer price must be positive")
+        ("check_offer_price", "CHECK(price > 0)", "An offer price must be positive"),
+        ("check_validity", "CHECK(validity > 0)", "Validity can not be a negative value")
     ]
     _order = "price desc"
 
@@ -27,7 +29,7 @@ class EstatePropertyOffer(models.Model):
     )
     res_partner_id = fields.Many2one("res.partner", string="Customer", required=True)
     property_id = fields.Many2one("estate.property", string="Property", required=True)
-    validity = fields.Integer("Validity")
+    validity = fields.Integer(string="Validity", default=7)
     # We put this into string to avoid error, in python we always define function first den declaration
     # U cant change the deadline, in order to do it, we add an *inverse* attribute
     # with this attribute if u change the deadline date, it will update the validity field
@@ -46,7 +48,7 @@ class EstatePropertyOffer(models.Model):
             if rec.create_date and rec.validity:
                 rec.deadline = rec.create_date + timedelta(days=rec.validity)
             else:
-                rec.deadline = False
+                rec.deadline = fields.Date.today() + timedelta(days=rec.validity)
 
     # no need to use decorators here, coz this does not depend to any field
     # output will be visible only when u SAVE CHANGES
@@ -55,7 +57,6 @@ class EstatePropertyOffer(models.Model):
         for rec in self:
             # convert this to days, never mind the output is. (it's the date, full date)
             rec.validity = (rec.deadline - rec.create_date.date()).days
-
 
     def action_accept(self):
         self.ensure_one()
@@ -72,3 +73,55 @@ class EstatePropertyOffer(models.Model):
 
     def action_refuse(self):
         self.status = "refused"
+
+
+    @api.model_create_multi
+    def create(self, vals):
+        for rec in vals:
+            if not rec.get('create_date'):
+                rec['create_date'] = fields.Datetime.now()
+        return super(EstatePropertyOffer, self).create(vals)
+
+    @api.constrains('validity')
+    def _check_validity(self):
+        for rec in self:
+            if rec.deadline <= rec.create_date.date():
+                raise ValidationError(
+                    _("Deadline cannot be before creation date")
+                )
+
+    @api.constrains('price')
+    def _check_price(self):
+        for rec in self:
+            current_property_offers_rec = self.env['estate.property.offer'].search([('property_id', '=', rec.property_id.id)])
+            #delete the actual record created bfr constraint verification
+            current_property_offers_rec_filtered = current_property_offers_rec.filtered(lambda  r : r.id != rec.id)
+            if rec.price < min(current_property_offers_rec_filtered.mapped('price')):
+                raise ValidationError(
+                    _("Your offer is cheap than existing ones")
+                )
+
+    @api.model_create_multi
+    def create(self, vals_dic):
+        res = super().create(vals_dic)
+        for vals in vals_dic:
+            property = self.env['estate.property'].browse(vals.get('property_id'))
+            property.write(
+                {
+                    'state': 'received'
+                }
+            )
+            print(f"++++++++ Property of offer : {property} ")
+        # if self.env
+        return res
+
+    def write(self, vals):
+        print(vals)
+        res_partner_ids = self.env['res.partner'].search(
+            [
+                ('is_company', '=', True),
+            ],
+            limit=5, order='name desc'
+        )
+        print(res_partner_ids)
+        return  super(EstatePropertyOffer, self).write(vals)

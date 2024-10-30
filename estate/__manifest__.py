@@ -18,10 +18,15 @@
         'views/estate_property_views.xml',
         'views/estate_menus.xml',
         #MENU
+
+        # DATAS Files
+        'data/property_type_datas.xml',
+        'data/estate.property.type.csv'
     ],
 
     "demo": [
-        'demo/demo.xml',
+        'demo/property_demos.xml',
+        'demo/property_tag_demos.xml',
     ],
 
     "assets" : {
@@ -30,7 +35,7 @@
         ],
     },
 
-    "depends" : ["base"],
+    "depends" : ["base", "mail"],
     "installable": True,
     "application": True,
     "license": "LGPL-3",
