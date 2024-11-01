@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record id="module_category_estate" model="ir.module.category">
+        <field name="name">Real Estate</field>
+        <field name="description">Helps you handle properties, and offers</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="group_property_user" model="res.groups">
+        <field name="name">User: Manage own property</field>
+        <field name="category_id" ref="estate.module_category_estate" />
+        <!-- implied_ids is for connect our group with a one already exist in odoo        -->
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <!--   setting up users     -->
+        <field name="users" eval="[(4, ref('base.user_demo'))]" />
+    </record>
+
     <record id="estate_manager" model="res.groups">
-        <field name="name">Estate Manager</field>
+        <field name="name">Manager: Manage all properties</field>
+        <field name="category_id" ref="estate.module_category_estate" />
+        <!-- implied_ids is for connect our group with a one already exist in odoo        -->
+        <field name="implied_ids" eval="[(4, ref('estate.group_property_user'))]" />
+        <!--   setting up users     -->
+        <field name="users" eval="[(4, ref('base.user_admin'))]" />
+    </record>
+
+    <!--  This record will help yu to add category to the technical section of your user setting  -->
+    <record id="group_property_test" model="res.groups">
+        <field name="name">Test: Manage all properties</field>
+        <field name="category_id" ref="base.module_category_hidden" />
     </record>
 </odoo>

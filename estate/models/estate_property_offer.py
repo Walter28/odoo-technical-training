@@ -69,6 +69,7 @@ class EstatePropertyOffer(models.Model):
                 _("Please set up the Buyer first before u accepting the offer")
             )
         self.status = "accepted"
+        self.property_id.state = "accepted"
         self.property_id.selling_price = self.price
 
     def action_refuse(self):
@@ -96,10 +97,11 @@ class EstatePropertyOffer(models.Model):
             current_property_offers_rec = self.env['estate.property.offer'].search([('property_id', '=', rec.property_id.id)])
             #delete the actual record created bfr constraint verification
             current_property_offers_rec_filtered = current_property_offers_rec.filtered(lambda  r : r.id != rec.id)
-            if rec.price < min(current_property_offers_rec_filtered.mapped('price')):
-                raise ValidationError(
-                    _("Your offer is cheap than existing ones")
-                )
+            if current_property_offers_rec_filtered:
+                if rec.price < min(current_property_offers_rec_filtered.mapped('price')):
+                    raise ValidationError(
+                        _("Your offer is cheap than existing ones")
+                    )
 
     @api.model_create_multi
     def create(self, vals_dic):

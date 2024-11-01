@@ -10,6 +10,7 @@
     "data": [
         #SECURITY
         'security/res_groups.xml',
+        'security/model_access.xml',
         'security/ir.model.access.csv',
         #VIEWS
         'views/estate_property_type_views.xml',

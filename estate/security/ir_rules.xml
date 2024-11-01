@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <!--    for users    -->
+        <record id="property_rule_for_users" model="ir.rule">
+            <field name="name">Property Rule for Users</field>
+            <field name="model_id" ref="estate.model_estate_property" />
+            <!--     users will only property that they have been assigned to      -->
+            <field name="domain_force">[('sales_id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="perm_unlink">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_read">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!--    for managers    -->
+        <record id="property_rule_for_managers" model="ir.rule">
+            <field name="name">Property Rule for Managers</field>
+            <field name="model_id" ref="estate.model_estate_property" />
+            <!--     users will only property that they have been assigned to      -->
+            <field name="domain_force">[(1,'=', 1)]</field>
+            <field name="groups" eval="[(4, ref('estate.estate_manager'))]" />
+            <field name="perm_unlink">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_read">1</field>
+            <field name="perm_create">1</field>
+        </record>
+    </data>
+</odoo>

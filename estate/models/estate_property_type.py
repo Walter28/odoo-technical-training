@@ -2,7 +2,7 @@
 from email.policy import default
 
 # odoo import goes here
-from odoo import  fields, models
+from odoo import  fields, models, api, _
 
 
 class EstatePropertyType(models.Model):

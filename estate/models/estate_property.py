@@ -86,6 +86,7 @@ class EstateProperty(models.Model):
     # *property_id* => this is an inverse field, is he IF of the property offer
     # ie c'est dans l'offre quon aura le property_id, une offre ne peut avoir une et une seule propriete
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
+    offer_count = fields.Integer(compute="_compute_offer_count")
     has_accepted_offer = fields.Boolean(compute="_compute_accepted_offer")
     has_offers = fields.Boolean(compute="_compute_has_offers")
     # update_state = fiel
@@ -94,6 +95,12 @@ class EstateProperty(models.Model):
     # For some of our widget, these fields are mendatory
     currency_id = fields.Integer()
     color = fields.Integer()
+
+    @api.depends("offer_ids")
+    def _compute_offer_count(self):
+        for rec in self:
+            rec.offer_count = len(rec.offer_ids)
+
 
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
@@ -138,6 +145,7 @@ class EstateProperty(models.Model):
             property.has_accepted_offer = any(
                 offer.status == 'accepted' for offer in property.offer_ids
             )
+            print(f"++++++ has accepted offer : {property.has_accepted_offer}")
             if property.has_accepted_offer:
                 property.state = 'accepted'
 
