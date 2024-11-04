@@ -8,17 +8,19 @@
     "category": "",
 
     "data": [
-        #SECURITY
+        # SECURITY
         'security/res_groups.xml',
         'security/model_access.xml',
         'security/ir.model.access.csv',
-        #VIEWS
+        # VIEWS
         'views/estate_property_type_views.xml',
         'views/estate_property_tag_views.xml',
         'views/estate_property_offer_views.xml',
         'views/estate_property_views.xml',
         'views/estate_menus.xml',
-        #MENU
+        # TEMPLATE
+        'views/property_web_template.xml',
+        # MENU
 
         # DATAS Files
         'data/property_type_datas.xml',
