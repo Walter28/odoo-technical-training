@@ -28,6 +28,7 @@ class EstatePropertyOffer(models.Model):
         copy = False,
     )
     res_partner_id = fields.Many2one("res.partner", string="Customer", required=True)
+    partner_email = fields.Char(string="Buyer Email", related='res_partner_id.email')
     property_id = fields.Many2one("estate.property", string="Property", required=True)
     validity = fields.Integer(string="Validity", default=7)
     # We put this into string to avoid error, in python we always define function first den declaration
@@ -127,3 +128,19 @@ class EstatePropertyOffer(models.Model):
         )
         print(res_partner_ids)
         return  super(EstatePropertyOffer, self).write(vals)
+
+    # SERVER ACTION
+    def extend_offer_deadline(self):
+        active_ids = self._context.get('active_ids', [])
+        if active_ids:
+            offer_ids = self.env['estate.property.offer'].browse(active_ids)
+            for offer in offer_ids:
+                offer.validity += 1
+
+    # Scheduled action
+    def _extend_offer_deadline(self):
+        # this means to search all
+        offer_ids = self.env['estate.property.offer'].search([])
+        # every day increase offers validity with one digit
+        for offer in offer_ids:
+            offer.validity += 1

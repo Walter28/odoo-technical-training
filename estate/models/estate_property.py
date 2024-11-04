@@ -48,7 +48,8 @@ class EstateProperty(models.Model):
         required = True,
         # if you duplicated any record this field will not be duplicated
         copy = False,
-        default = "new"
+        default = "new",
+        group_expand = '_expand_state',
 
     )
     description = fields.Text(string="Description")
@@ -56,9 +57,9 @@ class EstateProperty(models.Model):
 
     # We will call a custom function in order to get the date in 3 months from today for the default value
     date_availability = fields.Date(string="Available from", default=lambda self: date_in_three_months(), copy=False)
-    expected_price = fields.Float(required=True, string="Expected price")
-    best_offer = fields.Float(compute='_compute_best_offer')
-    selling_price = fields.Float(string="Selling price", copy=False, readonly=True)
+    expected_price = fields.Monetary(required=True, string="Expected price")
+    best_offer = fields.Monetary(compute='_compute_best_offer')
+    selling_price = fields.Monetary(string="Selling price", copy=False, readonly=True)
     bedrooms = fields.Integer(string="Bedrooms", default=2)
     living_area = fields.Integer(string="Living area")
     facades = fields.Integer(string="Facades")
@@ -93,8 +94,14 @@ class EstateProperty(models.Model):
     property_tag_ids = fields.Many2many("estate.property.tag", string="Property tag")
 
     # For some of our widget, these fields are mendatory
-    currency_id = fields.Integer()
+    currency_id = fields.Many2one("res.currency", string='Currency',
+                                  default=lambda self: self.env.user.company_id.currency_id)
     color = fields.Integer()
+
+    def _expand_state(self, states, domain, order):
+        return [
+            key for key, dummy in type(self).state.selection
+        ]
 
     @api.depends("offer_ids")
     def _compute_offer_count(self):
@@ -195,3 +202,24 @@ class EstateProperty(models.Model):
                 raise UserError(
                     _("You can't delete properties containing offers!")
                 )
+
+    def action_url_action(self):
+        return {
+            'type': 'ir.actions.act_url',
+            # the url to be opened
+            'url': '8.8.8.8',
+            # open in a new page or replaced the current one ('new' or 'self')
+            'target': 'self'
+        }
+
+    def _get_report_base_filename(self):
+        # this makes us get just one record at the point of query so that we don't have multiple record sets
+        self.ensure_one()
+        return 'Estate Property - %s ' % self.name
+
+    def action_send_email(self):
+        mail_template = self.env.ref('estate.offer_mail_template')
+        mail_template.send_mail(self.id, force_send=True)
+
+    def _get_emails(self):
+        return  ','.join(self.offer_ids.mapped('partner_email'))

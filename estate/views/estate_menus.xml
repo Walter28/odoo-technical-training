@@ -8,6 +8,7 @@
             <menuitem id="menu_property_type_settings" name="Property Types" action="estate.action_property_type" />
             <menuitem id="menu_property_tag_settings" name="Property Tags" action="estate.action_property_tag" />
             <menuitem id="menu_property_offer_settings" name="Property Offers" action="estate.action_property_offer" />
+            <menuitem id="menu_test_client_action" name="Test Client Action" action="estate.action_custom_client_action" />
         </menuitem>
     </menuitem>
 </odoo>

@@ -22,7 +22,12 @@
 
         # DATAS Files
         'data/property_type_datas.xml',
-        'data/estate.property.type.csv'
+        'data/estate.property.type.csv',
+        'data/mail_template.xml',
+        
+        # Reports
+        'report/report_template.xml',
+        'report/property_report.xml',
     ],
 
     "demo": [
@@ -33,6 +38,8 @@
     "assets" : {
         "web.assets_backend": [
             'estate/static/src/css/style.css',
+            'estate/static/src/js/my_custom_tag.js',
+            'estate/static/src/xml/my_custom_tag.xml',
         ],
     },
 
